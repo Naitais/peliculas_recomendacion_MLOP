@@ -69,7 +69,41 @@ def score_titulo( titulo_de_la_filmación ):
     popularity=movies.loc[movies.movie_title == titulo_de_la_filmación, ["popularity"]]
     return f"La película titulada {(title).capitalize} se estreno en el año {year} y tiene un puntaje de popularidad de {popularity}."
 
-#FOR WHATEVER REASON THE FUNCTION CANT FIND ANY MOVIE, LETS CONTINUE TOMORROW
+#TODAS LAS FUNCIONES QUE ESTAN ARRIBA LAS TENGO QUE ELIMINAR PORQUE ME EQUIVOQUE DE CONSIGNAS Y SON LAS DE
+#LA COHORTE ANTERIOR XD
+
+
+#-------------------------------------------------------------------------------------------------------#
+######################################## PRIEMRA FUINCION ###############################################
+#-------------------------------------------------------------------------------------------------------#
+
+
+
+#Se ingresa un idioma (como están escritos en el dataset, no hay que traducirlos!). 
+#Debe devolver la cantidad de películas producidas en ese idioma.
+#   Ejemplo de retorno: X cantidad de películas fueron estrenadas en idioma
+
+@app.get("/movies/peliculas_idioma/{Idioma}") #decorator
+def peliculas_idioma( Idioma: str ):
+    Idioma =Idioma.lower() #lo convierto a lower case para evitar errores en el input
+    dfPeliculasIdiomas = [] #primero cargo el dataset que uso en esta funcion utilizando with open
+    with open(r"datasets\datasets_limpios\dfPeliculasIdiomas.csv", newline="", encoding="utf-8") as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            dfPeliculasIdiomas.append(row)
+
+    dfPeliculasIdiomas=pd.DataFrame(dfPeliculasIdiomas)
+    idiomasCorto = set([i for i in dfPeliculasIdiomas.original_language]) #busco todos los idiomas
+
+    if Idioma in idiomasCorto: #utilizo los idiomas para tener algo de error handling cuando el input no esta en la lista de idiomas
+        cantidadPels=dfPeliculasIdiomas.loc[dfPeliculasIdiomas.original_language == Idioma, ["original_language"]].count()
+        cantidadPels= cantidadPels.iloc[0]
+        return f"La cantidad de películas estrenadas en idioma '{Idioma}' es {cantidadPels}."
+    else: 
+        return f"ERROR: '{(Idioma).capitalize()}' no es un idioma valido. Ejemplo de idioma valido: en, es, fr, etc. Intente nuevamente."
+
+
+
 
 
 
