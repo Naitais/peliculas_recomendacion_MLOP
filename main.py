@@ -57,10 +57,19 @@ def cantidad_filmaciones_dia(Dia):
     else:
         return f"ERROR: '{(Dia).capitalize()}' no es un día valido. Intente nuevamente."
 
+#def score_titulo( titulo_de_la_filmación ): Se ingresa el título de una filmación esperando 
+#como respuesta el título, el año de estreno y el score.
+    #Ejemplo de retorno: La película X fue estrenada en el año X con un score/popularidad de X
 
+@app.get("/movies/peliculas_score/{titulo_de_la_filmación}") #decorator
+def score_titulo( titulo_de_la_filmación ):
+    movies = load_movies()
+    title=movies.loc[movies.movie_title == titulo_de_la_filmación, ["movie_title"]]
+    year=movies.loc[movies.movie_title == titulo_de_la_filmación, ["release_year"]]
+    popularity=movies.loc[movies.movie_title == titulo_de_la_filmación, ["popularity"]]
+    return f"La película titulada {(title).capitalize} se estreno en el año {year} y tiene un puntaje de popularidad de {popularity}."
 
-
-
+#FOR WHATEVER REASON THE FUNCTION CANT FIND ANY MOVIE, LETS CONTINUE TOMORROW
 
 
 
