@@ -86,14 +86,17 @@ def score_titulo( titulo_de_la_filmación ):
 @app.get("/movies/peliculas_idioma/{Idioma}") #decorator
 def peliculas_idioma( Idioma: str ):
     Idioma =Idioma.lower() #lo convierto a lower case para evitar errores en el input
+
     dfPeliculasIdiomas = [] #primero cargo el dataset que uso en esta funcion utilizando with open
     with open(r"datasets\datasets_limpios\dfPeliculasIdiomas.csv", newline="", encoding="utf-8") as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
             dfPeliculasIdiomas.append(row)
-
+    #transformo resultado en df
     dfPeliculasIdiomas=pd.DataFrame(dfPeliculasIdiomas)
-    idiomasCorto = set([i for i in dfPeliculasIdiomas.original_language]) #busco todos los idiomas
+
+    #busco todos los idiomas. Usando la funcion set, me trae valores unicos
+    idiomasCorto = set([i for i in dfPeliculasIdiomas.original_language]) 
 
     if Idioma in idiomasCorto: #utilizo los idiomas para tener algo de error handling cuando el input no esta en la lista de idiomas
         cantidadPels=dfPeliculasIdiomas.loc[dfPeliculasIdiomas.original_language == Idioma, ["original_language"]].count()
@@ -103,7 +106,86 @@ def peliculas_idioma( Idioma: str ):
         return f"ERROR: '{(Idioma).capitalize()}' no es un idioma valido. Ejemplo de idioma valido: en, es, fr, etc. Intente nuevamente."
 
 
+#-------------------------------------------------------------------------------------------------------#
+######################################## SEGUNDA FUINCION ###############################################
+#-------------------------------------------------------------------------------------------------------#
+
+#def peliculas_duracion( Pelicula: str ): Se ingresa una pelicula. Debe devolver la duracion y el año.
+#Ejemplo de retorno: X . Duración: x. Año: xx
+
+@app.get("/movies/peliculas_duracion/{Pelicula}") #decorator
+def peliculas_duracion( Pelicula: str ):
+
+    dfMoviesDuration = [] #primero cargo el dataset que uso en esta funcion utilizando with open
+    with open(r"datasets\datasets_limpios\dfMoviesduration.csv", newline="", encoding="utf-8") as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            dfMoviesDuration.append(row)
+    #transformo resultado en df
+    dfMoviesDuration=pd.DataFrame(dfMoviesDuration)
+
+    #cambio a lowercase para que no hayan errores de capitalizacion en el input de mi funcion
+    dfMoviesDuration["movie_title"] = dfMoviesDuration["movie_title"].str.lower()
+    Pelicula = Pelicula.lower()
+
+    #busco todos los idiomas. Usando la funcion set, me trae valores unicos
+    titulos = set([i for i in dfMoviesDuration.movie_title])
+
+    #utilizo los idiomas para tener algo de error handling cuando el input no esta en la lista de idiomas
+    if Pelicula in titulos: 
+        #busco la duracion en minutos de la pelicula
+        movieDuration=dfMoviesDuration.loc[dfMoviesDuration["movie_title"] == Pelicula, ["runtime"]]
+        movieDuration=movieDuration.iloc[0, 0]
+
+        #busco el año de estrno de la pelicula
+        movieYear=dfMoviesDuration.loc[dfMoviesDuration["movie_title"] == Pelicula, ["release_year"]]
+        movieYear=movieYear.iloc[0, 0]
+
+        return f"La película {(Pelicula).capitalize()} fue estrenada en el año {movieYear} con una duración de {movieDuration} minutos."
+    else:
+         return f"ERROR: '{(Pelicula).capitalize()}' no es una película valida. Intente nuevamente."
 
 
 
+#-------------------------------------------------------------------------------------------------------#
+######################################## TERCERA FUINCION ###############################################
+#-------------------------------------------------------------------------------------------------------#
 
+#def franquicia( Franquicia: str ): Se ingresa la franquicia, retornando la cantidad de peliculas, ganancia total y promedio
+#    Ejemplo de retorno: La franquicia X posee X peliculas, una ganancia total de x y una ganancia promedio de xx
+
+@app.get("/movies/franquicia/{Franquicia}") #decorator
+def franquicia( Franquicia: str ):
+    dfFranquicia = [] #primero cargo el dataset que uso en esta funcion utilizando with open
+    with open(r"datasets\datasets_limpios\dfFranquicia.csv", newline="", encoding="utf-8") as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            dfFranquicia.append(row)
+
+    #transformo resultado en df
+    dfFranquicia=pd.DataFrame(dfFranquicia)
+
+    #cambio a lowercase para que no hayan errores de capitalizacion en el input de mi funcion
+    dfFranquicia["franquicia"] = dfFranquicia["franquicia"].str.lower()
+    Franquicia = Franquicia.lower()
+
+    #busco todos los idiomas. Usando la funcion set, me trae valores unicos
+    franquicias = set([i for i in dfFranquicia.franquicia])
+        
+    if Franquicia in franquicias:
+
+        cantidadPeliculas = dfFranquicia.loc[dfFranquicia["franquicia"] == Franquicia, ["movie_count"]]
+        cantidadPeliculas = cantidadPeliculas.iloc[0, 0]
+
+        ganancia = dfFranquicia.loc[dfFranquicia["franquicia"] == Franquicia, ["ganancia_total"]]
+        ganancia = ganancia.iloc[0, 0]
+
+        ganancia_promedio = dfFranquicia.loc[dfFranquicia["franquicia"] == Franquicia, ["ganancia_promedio"]]
+        ganancia_promedio= ganancia_promedio.iloc[0, 0]
+
+        return f"La franquicia {(Franquicia).capitalize} posee {cantidadPeliculas} películas, una ganancia total de {ganancia} y una ganancia promedio de {ganancia_promedio}."
+
+    else:
+         
+         return f"ERROR: '{(Franquicia).capitalize()}' no es una franquicia valida. Intente nuevamente."
+print(franquicia("Toy Story Collection"))
