@@ -183,9 +183,51 @@ def franquicia( Franquicia: str ):
         ganancia_promedio = dfFranquicia.loc[dfFranquicia["franquicia"] == Franquicia, ["ganancia_promedio"]]
         ganancia_promedio= ganancia_promedio.iloc[0, 0]
 
-        return f"La franquicia {(Franquicia).capitalize} posee {cantidadPeliculas} películas, una ganancia total de {ganancia} y una ganancia promedio de {ganancia_promedio}."
+        return f"La franquicia {(Franquicia).capitalize()} posee {cantidadPeliculas} películas, una ganancia total de {ganancia} y una ganancia promedio de {ganancia_promedio}."
 
     else:
          
          return f"ERROR: '{(Franquicia).capitalize()}' no es una franquicia valida. Intente nuevamente."
-print(franquicia("Toy Story Collection"))
+
+
+
+#-------------------------------------------------------------------------------------------------------#
+######################################## CUARTA FUINCION ################################################
+#-------------------------------------------------------------------------------------------------------#
+
+#def peliculas_pais( Pais: str ): Se ingresa un país (como están escritos en el dataset, no hay que traducirlos!), retornando la cantidad de peliculas producidas en el mismo.
+#    Ejemplo de retorno: Se produjeron X películas en el país X
+
+@app.get("/movies/pais/{Pais}") #decorator
+def peliculas_pais( Pais: str ):
+    dfPaises = [] #primero cargo el dataset que uso en esta funcion utilizando with open
+    with open(r"datasets\datasets_limpios\dfPaises.csv", newline="", encoding="utf-8") as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            dfPaises.append(row)
+
+    #transformo resultado en df
+    dfPaises=pd.DataFrame(dfPaises)
+
+    #cambio a lowercase para que no hayan errores de capitalizacion en el input de mi funcion
+    dfPaises["production_country"] = dfPaises["production_country"].str.lower()
+    Pais = Pais.lower()
+
+    #busco todos los idiomas. Usando la funcion set, me trae valores unicos
+    paises=set([i for i in dfPaises["production_country"]])
+        
+    if Pais in paises:
+
+        cantidadPeliculas = dfPaises.loc[(dfPaises["production_country"]==Pais),["movie_count"]]
+        cantidadPeliculas=cantidadPeliculas.iloc[0, 0]
+        return f"En {(Pais).capitalize()} se produjeron {cantidadPeliculas} películas."
+
+    else:
+         
+         return f"ERROR: '{(Pais).capitalize()}' no es un país valida. Intente nuevamente."
+
+
+print(peliculas_pais("Argentina"))
+
+
+    
