@@ -5,78 +5,11 @@ locale.setlocale(locale.LC_TIME, 'es_ES') #importo locale y seteo idioma para qu
 
 app = FastAPI()
 
-#considerar aramr csvs especificos para cada funcion
-
 @app.get("/")
 def home():
     return {"HOME": "home"}
 
-#cargo csv limpio en una lista con cada row como diccionario
-#VOY A TENER QUE ELIMINAR ESTA FUNCION PORQUE SOLO TIENEN QUE HABER 6
-def load_movies():
-    movies = []
-    with open(r"datasets\datasets_limpios\dfMovies.csv", newline="", encoding="utf-8") as csvfile:
-        reader = csv.DictReader(csvfile)
-        for row in reader:
-            movies.append(row)
-        movies=pd.DataFrame(movies)
-        return movies
-
-#def cantidad_filmaciones_mes( Mes ): Se ingresa un mes en idioma Español. Debe devolver la cantidad de películas que fueron estrenadas en el mes consultado en la totalidad del dataset.
-#   Ejemplo de retorno: X cantidad de películas fueron estrenadas en el mes de X
-
-@app.get("/movies/peliculas_mes/{Mes}") #decorator
-def cantidad_filmaciones_mes(Mes):
-    meses=["enero", "febrero", "marzo", "abril", "mayo", "junio",
-            "julio","agosto", "septiembre", "octubre", "noviembre", "diciembre"]
-    if Mes in meses:
-        movies = load_movies()
-        movies["release_date"] = pd.to_datetime(movies["release_date"], format="%Y-%m-%d")
-        month = movies["release_date"].dt.strftime("%B")
-        result = movies[month == Mes.lower()]
-        result=result["release_date"].count().item() #uso la funcion .item() para convertir en int 
-                                                    #nativo de python y no tener errores
-                                                    #al pasar una variable de numpy
-        return f"En el mes de {(Mes).lower()} se estrenaron {result} películas."
-    else:
-        return f"ERROR: '{(Mes).capitalize()}' no es un mes valido. Intente nuevamente."
-    
-#copio la misma estructura de la funcion de meses y la adapto para que tome dias de la semana
-@app.get("/movies/peliculas_dias/{Dia}") #decorator
-def cantidad_filmaciones_dia(Dia):
-    dias=["lunes","martes","miercoles", "jueves", "viernes", "sabado", "domingo"]
-    if Dia in dias:
-        movies = load_movies()
-        movies["release_date"] = pd.to_datetime(movies["release_date"], format="%Y-%m-%d")
-        dia = movies["release_date"].dt.strftime("%A")
-        result = movies[dia == Dia.lower()]
-        result=result["release_date"].count().item() #uso la funcion .item() para convertir en int 
-                                                    #nativo de python y no tener errores
-                                                    #al pasar una variable de numpy
-        return f"En los dias {(Dia).lower()} se estrenaron {result} películas."
-    else:
-        return f"ERROR: '{(Dia).capitalize()}' no es un día valido. Intente nuevamente."
-
-#def score_titulo( titulo_de_la_filmación ): Se ingresa el título de una filmación esperando 
-#como respuesta el título, el año de estreno y el score.
-    #Ejemplo de retorno: La película X fue estrenada en el año X con un score/popularidad de X
-
-@app.get("/movies/peliculas_score/{titulo_de_la_filmación}") #decorator
-def score_titulo( titulo_de_la_filmación ):
-    movies = load_movies()
-    title=movies.loc[movies.movie_title == titulo_de_la_filmación, ["movie_title"]]
-    year=movies.loc[movies.movie_title == titulo_de_la_filmación, ["release_year"]]
-    popularity=movies.loc[movies.movie_title == titulo_de_la_filmación, ["popularity"]]
-    return f"La película titulada {(title).capitalize} se estreno en el año {year} y tiene un puntaje de popularidad de {popularity}."
-
-#TODAS LAS FUNCIONES QUE ESTAN ARRIBA LAS TENGO QUE ELIMINAR PORQUE ME EQUIVOQUE DE CONSIGNAS Y SON LAS DE
-#LA COHORTE ANTERIOR XD
-
-
-#-------------------------------------------------------------------------------------------------------#
-######################################## PRIEMRA FUINCION ###############################################
-#-------------------------------------------------------------------------------------------------------#
-
+#----------------------------------------------- PRIMERA FUINCION -----------------------------------------------------#
 
 
 #Se ingresa un idioma (como están escritos en el dataset, no hay que traducirlos!). 
@@ -103,12 +36,11 @@ def peliculas_idioma( Idioma: str ):
         cantidadPels= cantidadPels.iloc[0]
         return f"La cantidad de películas estrenadas en idioma '{Idioma}' es {cantidadPels}."
     else: 
-        return f"ERROR: '{(Idioma).capitalize()}' no es un idioma valido. Ejemplo de idioma valido: en, es, fr, etc. Intente nuevamente."
+        return f"ERROR: '{(Idioma).capitalize()}' no es un idioma valido o no hay información disponible. Ejemplo de idioma valido: en, es, fr, etc. Intente nuevamente."
 
 
-#-------------------------------------------------------------------------------------------------------#
-######################################## SEGUNDA FUINCION ###############################################
-#-------------------------------------------------------------------------------------------------------#
+#----------------------------------------------- SEGUNDA FUINCION -----------------------------------------------------#
+
 
 #def peliculas_duracion( Pelicula: str ): Se ingresa una pelicula. Debe devolver la duracion y el año.
 #Ejemplo de retorno: X . Duración: x. Año: xx
@@ -125,7 +57,7 @@ def peliculas_duracion( Pelicula: str ):
     dfMoviesDuration=pd.DataFrame(dfMoviesDuration)
 
     #cambio a lowercase para que no hayan errores de capitalizacion en el input de mi funcion
-    dfMoviesDuration["movie_title"] = dfMoviesDuration["movie_title"].str.lower()
+    dfMoviesDuration["movie_title"] = dfMoviesDuration["movie_title"].str.lower().str.strip()
     Pelicula = Pelicula.lower()
 
     #busco todos los idiomas. Usando la funcion set, me trae valores unicos
@@ -143,13 +75,11 @@ def peliculas_duracion( Pelicula: str ):
 
         return f"La película {(Pelicula).capitalize()} fue estrenada en el año {movieYear} con una duración de {movieDuration} minutos."
     else:
-         return f"ERROR: '{(Pelicula).capitalize()}' no es una película valida. Intente nuevamente."
+         return f"ERROR: '{(Pelicula).capitalize()}' no es una película valida o no hay información disponible. Intente nuevamente."
 
 
+#----------------------------------------------- TERCERA FUINCION -----------------------------------------------------#
 
-#-------------------------------------------------------------------------------------------------------#
-######################################## TERCERA FUINCION ###############################################
-#-------------------------------------------------------------------------------------------------------#
 
 #def franquicia( Franquicia: str ): Se ingresa la franquicia, retornando la cantidad de peliculas, ganancia total y promedio
 #    Ejemplo de retorno: La franquicia X posee X peliculas, una ganancia total de x y una ganancia promedio de xx
@@ -166,7 +96,7 @@ def franquicia( Franquicia: str ):
     dfFranquicia=pd.DataFrame(dfFranquicia)
 
     #cambio a lowercase para que no hayan errores de capitalizacion en el input de mi funcion
-    dfFranquicia["franquicia"] = dfFranquicia["franquicia"].str.lower()
+    dfFranquicia["franquicia"] = dfFranquicia["franquicia"].str.lower().str.strip()
     Franquicia = Franquicia.lower()
 
     #busco todos los idiomas. Usando la funcion set, me trae valores unicos
@@ -187,13 +117,10 @@ def franquicia( Franquicia: str ):
 
     else:
          
-         return f"ERROR: '{(Franquicia).capitalize()}' no es una franquicia valida. Intente nuevamente."
+         return f"ERROR: '{(Franquicia).capitalize()}' no es una franquicia valida o no hay información disponible. Intente nuevamente."
 
 
-
-#-------------------------------------------------------------------------------------------------------#
-######################################## CUARTA FUINCION ################################################
-#-------------------------------------------------------------------------------------------------------#
+#----------------------------------------------- CUARTA FUINCION -----------------------------------------------------#
 
 #def peliculas_pais( Pais: str ): Se ingresa un país (como están escritos en el dataset, no hay que traducirlos!), retornando la cantidad de peliculas producidas en el mismo.
 #    Ejemplo de retorno: Se produjeron X películas en el país X
@@ -210,7 +137,7 @@ def peliculas_pais( Pais: str ):
     dfPaises=pd.DataFrame(dfPaises)
 
     #cambio a lowercase para que no hayan errores de capitalizacion en el input de mi funcion
-    dfPaises["production_country"] = dfPaises["production_country"].str.lower()
+    dfPaises["production_country"] = dfPaises["production_country"].str.lower().str.strip()
     Pais = Pais.lower()
 
     #busco todos los idiomas. Usando la funcion set, me trae valores unicos
@@ -224,10 +151,82 @@ def peliculas_pais( Pais: str ):
 
     else:
          
-         return f"ERROR: '{(Pais).capitalize()}' no es un país valida. Intente nuevamente."
+         return f"ERROR: '{(Pais).capitalize()}' no es un país valido o no hay información disponible. Intente nuevamente."
 
 
-print(peliculas_pais("Argentina"))
+#----------------------------------------------- QUINTA FUINCION -----------------------------------------------------#
+
+@app.get("/movies/productora/{Productora}") #decorator
+def productoras_exitosas( Productora: str ):
+    dfProductora = [] #primero cargo el dataset que uso en esta funcion utilizando with open
+    with open(r"datasets\datasets_limpios\dfProductora.csv", newline="", encoding="utf-8") as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            dfProductora.append(row)
+
+    #transformo resultado en df
+    dfProductora=pd.DataFrame(dfProductora)
+
+    #cambio a lowercase para que no hayan errores de capitalizacion en el input de mi funcion
+    dfProductora["production_company"] = dfProductora["production_company"].str.lower().str.strip()
+    Productora = Productora.lower()
+
+    #busco todos los idiomas. Usando la funcion set, me trae valores unicos
+    productoras = set([i for i in dfProductora.production_company])
+        
+    if Productora in productoras:
+
+        cantidadPeliculas = dfProductora.loc[dfProductora["production_company"] == Productora, ["movie_count"]]
+        cantidadPeliculas = cantidadPeliculas.iloc[0, 0]
+
+        ganancia = dfProductora.loc[dfProductora["production_company"] == Productora, ["ganancia_total"]]
+        ganancia = ganancia.iloc[0, 0]
+
+        return f"La productora {(Productora).capitalize()} posee {cantidadPeliculas} películas y una ganancia total de {ganancia}."
+
+    else:
+         
+         return f"ERROR: '{(Productora).capitalize()}' no es una productora valida o no hay información disponible. Intente nuevamente."
+
+
+
+#----------------------------------------------- SEXTA FUINCION -----------------------------------------------------#
+
+#def get_director( nombre_director ): Se ingresa el nombre de un director que se encuentre dentro de un 
+# dataset debiendo devolver el éxito del mismo medido a través del retorno. Además, deberá devolver el 
+# nombre de cada película con la fecha de lanzamiento, retorno individual, costo y ganancia de la misma, en formato lista.
+
+@app.get("/movies/info_directores/{nombre_director}") #decorator
+def get_director( nombre_director ):
+
+    dfDirectoresExito = [] #primero cargo el dataset que uso en esta funcion utilizando with open
+    with open(r"datasets\datasets_limpios\dfDirectoresExito.csv", newline="", encoding="utf-8") as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            dfDirectoresExito.append(row)
+
+    #transformo resultado en df
+    dfDirectoresExito=pd.DataFrame(dfDirectoresExito)
+
+    #cambio a lowercase para que no hayan errores de capitalizacion en el input de mi funcion
+    #Tambien le hago un strip para que quite espacios de mas porque algunos nombres no los encontraba
+    dfDirectoresExito["name"] = dfDirectoresExito["name"].str.lower().str.strip()
+    nombre_director = nombre_director.lower()
+
+    #busco todos los idiomas. Usando la funcion set, me trae valores unicos
+    directores = set([i for i in dfDirectoresExito.name])
+
+        
+    if nombre_director in directores:
+
+        exito = dfDirectoresExito.loc[dfDirectoresExito["name"] == nombre_director, ["director_return"]]
+        exito = exito.iloc[0, 0]
+
+        return f"El director {(nombre_director).capitalize()} posee un exito medido por el retorno de {exito}."
+
+    else:
+         #esta funcion no encuentra a "Yeon Sang-Ho" y no entiendo porque
+         return f"ERROR: '{(nombre_director).capitalize()}' no es un nombre de director valido o no hay información disponible. Intente nuevamente."
 
 
     
