@@ -20,7 +20,7 @@ def peliculas_idioma( Idioma: str ):
     Idioma =Idioma.lower() #lo convierto a lower case para evitar errores en el input
 
     dfPeliculasIdiomas = [] #primero cargo el dataset que uso en esta funcion utilizando with open
-    with open(r"datasets\datasets_limpios\dfPeliculasIdiomas.csv", newline="", encoding="utf-8") as csvfile:
+    with open(r"datasets\dfPeliculasIdiomas.csv", newline="", encoding="utf-8") as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
             dfPeliculasIdiomas.append(row)
@@ -48,7 +48,7 @@ def peliculas_idioma( Idioma: str ):
 def peliculas_duracion( Pelicula: str ):
 
     dfMoviesDuration = [] #primero cargo el dataset que uso en esta funcion utilizando with open
-    with open(r"datasets\datasets_limpios\dfMoviesduration.csv", newline="", encoding="utf-8") as csvfile:
+    with open(r"datasets\dfMoviesDuration.csv", newline="", encoding="utf-8") as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
             dfMoviesDuration.append(row)
@@ -86,7 +86,7 @@ def peliculas_duracion( Pelicula: str ):
 @app.get("/movies/franquicia/{Franquicia}") #decorator
 def franquicia( Franquicia: str ):
     dfFranquicia = [] #primero cargo el dataset que uso en esta funcion utilizando with open
-    with open(r"datasets\datasets_limpios\dfFranquicia.csv", newline="", encoding="utf-8") as csvfile:
+    with open(r"datasets\dfFranquicia.csv", newline="", encoding="utf-8") as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
             dfFranquicia.append(row)
@@ -127,7 +127,7 @@ def franquicia( Franquicia: str ):
 @app.get("/movies/pais/{Pais}") #decorator
 def peliculas_pais( Pais: str ):
     dfPaises = [] #primero cargo el dataset que uso en esta funcion utilizando with open
-    with open(r"datasets\datasets_limpios\dfPaises.csv", newline="", encoding="utf-8") as csvfile:
+    with open(r"datasets\dfPaises.csv", newline="", encoding="utf-8") as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
             dfPaises.append(row)
@@ -158,7 +158,7 @@ def peliculas_pais( Pais: str ):
 @app.get("/movies/productora/{Productora}") #decorator
 def productoras_exitosas( Productora: str ):
     dfProductora = [] #primero cargo el dataset que uso en esta funcion utilizando with open
-    with open(r"datasets\datasets_limpios\dfProductora.csv", newline="", encoding="utf-8") as csvfile:
+    with open(r"datasets\dfProductora.csv", newline="", encoding="utf-8") as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
             dfProductora.append(row)
@@ -199,7 +199,7 @@ def productoras_exitosas( Productora: str ):
 def get_director( nombre_director ):
     #PRIMER DATASET DIRECTORES EXITO
     dfDirectoresExito = [] #primero cargo el dataset que uso en esta funcion utilizando with open
-    with open(r"datasets\datasets_limpios\dfDirectoresExito.csv", newline="", encoding="utf-8") as csvfile:
+    with open(r"datasets\dfDirectoresExito.csv", newline="", encoding="utf-8") as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
             dfDirectoresExito.append(row)
@@ -209,7 +209,7 @@ def get_director( nombre_director ):
 
     #SEGUNDO DATASET DIRECOTRES INFO PELICULA
     dfDirectoresInfoPeliculas = [] #primero cargo el dataset que uso en esta funcion utilizando with open
-    with open(r"datasets\datasets_limpios\dfDirectoresInfoPeliculas.csv", newline="", encoding="utf-8") as csvfile:
+    with open(r"datasets\dfDirectoresInfoPeliculas.csv", newline="", encoding="utf-8") as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
             dfDirectoresInfoPeliculas.append(row)
