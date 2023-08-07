@@ -1,9 +1,7 @@
 from fastapi import FastAPI
 import csv , pandas as pd
 
-import os
 
-file_path = os.path.join("datasets", "dfPeliculasIdiomas.csv")
 
 app = FastAPI()
 
@@ -23,7 +21,7 @@ def peliculas_idioma( Idioma: str ):
     Idioma =Idioma.lower() #lo convierto a lower case para evitar errores en el input
 
     dfPeliculasIdiomas = [] #primero cargo el dataset que uso en esta funcion utilizando with open
-    with open(r"datasets\dfPeliculasIdiomas.csv", newline="", encoding="utf-8") as csvfile:
+    with open(r"datasets//dfPeliculasIdiomas.csv", newline="", encoding="utf-8") as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
             dfPeliculasIdiomas.append(row)
@@ -51,7 +49,7 @@ def peliculas_idioma( Idioma: str ):
 def peliculas_duracion( Pelicula: str ):
 
     dfMoviesDuration = [] #primero cargo el dataset que uso en esta funcion utilizando with open
-    with open(os.path.abspath("datasets/dfPeliculasIdiomas.csv"), newline="", encoding="utf-8") as csvfile:
+    with open(r"datasets/dfMoviesDuration.csv", newline="", encoding="utf-8") as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
             dfMoviesDuration.append(row)
@@ -89,7 +87,7 @@ def peliculas_duracion( Pelicula: str ):
 @app.get("/movies/franquicia/{Franquicia}") #decorator
 def franquicia( Franquicia: str ):
     dfFranquicia = [] #primero cargo el dataset que uso en esta funcion utilizando with open
-    with open(r"datasets\dfFranquicia.csv", newline="", encoding="utf-8") as csvfile:
+    with open(r"\datasets\dfFranquicia.csv", newline="", encoding="utf-8") as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
             dfFranquicia.append(row)
@@ -130,7 +128,7 @@ def franquicia( Franquicia: str ):
 @app.get("/movies/pais/{Pais}") #decorator
 def peliculas_pais( Pais: str ):
     dfPaises = [] #primero cargo el dataset que uso en esta funcion utilizando with open
-    with open(r"datasets\dfPaises.csv", newline="", encoding="utf-8") as csvfile:
+    with open(r"/datasets/dfPaises.csv", newline="", encoding="utf-8") as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
             dfPaises.append(row)
