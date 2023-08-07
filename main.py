@@ -1,7 +1,6 @@
 from fastapi import FastAPI
-import csv , locale, pandas as pd
+import csv , pandas as pd
 
-locale.setlocale(locale.LC_TIME, 'es_ES') #importo locale y seteo idioma para que los meses salgan en español
 
 app = FastAPI()
 
@@ -250,6 +249,12 @@ def get_director( nombre_director ):
     else:
          
          return f"ERROR: '{(nombre_director).title()}' no es un nombre de director valido o no hay información disponible. Intente nuevamente."
+from fastapi import FastAPI
+import csv , locale, pandas as pd
 
-
-    
+import pandas
+import fastapi
+print("fastapi",fastapi.__version__)
+print("csv",csv.__version__)
+print("pandas",pandas.__version__)
+print("locale",locale.__version__)
