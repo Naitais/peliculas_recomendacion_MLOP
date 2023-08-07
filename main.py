@@ -1,6 +1,9 @@
 from fastapi import FastAPI
 import csv , pandas as pd
 
+import os
+
+file_path = os.path.join("datasets", "dfPeliculasIdiomas.csv")
 
 app = FastAPI()
 
