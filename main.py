@@ -198,7 +198,7 @@ def productoras_exitosas( Productora: str ):
 
 @app.get("/movies/info_directores/{nombre_director}") #decorator
 def get_director( nombre_director ):
-
+    #PRIMER DATASET DIRECTORES EXITO
     dfDirectoresExito = [] #primero cargo el dataset que uso en esta funcion utilizando with open
     with open(r"datasets\datasets_limpios\dfDirectoresExito.csv", newline="", encoding="utf-8") as csvfile:
         reader = csv.DictReader(csvfile)
@@ -208,9 +208,20 @@ def get_director( nombre_director ):
     #transformo resultado en df
     dfDirectoresExito=pd.DataFrame(dfDirectoresExito)
 
+    #SEGUNDO DATASET DIRECOTRES INFO PELICULA
+    dfDirectoresInfoPeliculas = [] #primero cargo el dataset que uso en esta funcion utilizando with open
+    with open(r"datasets\datasets_limpios\dfDirectoresInfoPeliculas.csv", newline="", encoding="utf-8") as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            dfDirectoresInfoPeliculas.append(row)
+
+    #transformo resultado en df
+    dfDirectoresInfoPeliculas=pd.DataFrame(dfDirectoresInfoPeliculas)
+
     #cambio a lowercase para que no hayan errores de capitalizacion en el input de mi funcion
     #Tambien le hago un strip para que quite espacios de mas porque algunos nombres no los encontraba
     dfDirectoresExito["name"] = dfDirectoresExito["name"].str.lower().str.strip()
+    dfDirectoresInfoPeliculas["name"] = dfDirectoresInfoPeliculas["name"].str.lower().str.strip()
     nombre_director = nombre_director.lower()
 
     #busco todos los idiomas. Usando la funcion set, me trae valores unicos
@@ -222,10 +233,22 @@ def get_director( nombre_director ):
         exito = dfDirectoresExito.loc[dfDirectoresExito["name"] == nombre_director, ["director_return"]]
         exito = exito.iloc[0, 0]
 
-        return f"El director {(nombre_director).capitalize()} posee un exito medido por el retorno de {exito}."
+        infoPelicula = dfDirectoresInfoPeliculas[dfDirectoresInfoPeliculas["name"] == nombre_director]
+
+        listaDictPeliculas= [] #meto en una lista diccionarios con la info de cada pelicula del director
+        for i in range(len(infoPelicula)):
+            row=infoPelicula.iloc[i].to_dict() #si uso la funcion to_dict() transformo cada row en un diccionario
+            listaDictPeliculas.append(row)
+        exitoMensaje=f"El director {(nombre_director).capitalize()} posee un exito medido por el retorno de {exito}. A continuación se lista información de sus películas:"
+
+        for key in listaDictPeliculas: #remuevo key/value pairs que son innecesarios en el diccionario
+            key.pop("", None)
+            key.pop("name", None)
+
+        return exitoMensaje,  listaDictPeliculas #al retornar cada variable por separado, python mete a ambas en una tupla
 
     else:
-         #esta funcion no encuentra a "Yeon Sang-Ho" y no entiendo porque
+         
          return f"ERROR: '{(nombre_director).capitalize()}' no es un nombre de director valido o no hay información disponible. Intente nuevamente."
 
 
