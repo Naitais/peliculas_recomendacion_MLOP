@@ -1,6 +1,10 @@
 from fastapi import FastAPI
 import csv , pandas as pd
 
+from funciones_varias import cargaCsvToDataFrame
+
+
+
 
 
 app = FastAPI()
@@ -19,14 +23,7 @@ def home():
 @app.get("/movies/peliculas_idioma/{Idioma}") #decorator
 def peliculas_idioma( Idioma: str ):
     Idioma =Idioma.lower() #lo convierto a lower case para evitar errores en el input
-
-    dfPeliculasIdiomas = [] #primero cargo el dataset que uso en esta funcion utilizando with open
-    with open(r"datasets_funciones_fastapi//dfPeliculasIdiomas.csv", newline="", encoding="utf-8") as csvfile:
-        reader = csv.DictReader(csvfile)
-        for row in reader:
-            dfPeliculasIdiomas.append(row)
-    #transformo resultado en df
-    dfPeliculasIdiomas=pd.DataFrame(dfPeliculasIdiomas)
+    dfPeliculasIdiomas=cargaCsvToDataFrame("dfPeliculasIdiomas", "datasets_funciones_fastapi")
 
     #busco todos los idiomas. Usando la funcion set, me trae valores unicos
     idiomasCorto = set([i for i in dfPeliculasIdiomas.original_language]) 
@@ -47,15 +44,8 @@ def peliculas_idioma( Idioma: str ):
 
 @app.get("/movies/peliculas_duracion/{Pelicula}") #decorator
 def peliculas_duracion( Pelicula: str ):
-
-    dfMoviesDuration = [] #primero cargo el dataset que uso en esta funcion utilizando with open
-    with open(r"datasets_funciones_fastapi//dfMoviesDuration.csv", newline="", encoding="utf-8") as csvfile:
-        reader = csv.DictReader(csvfile)
-        for row in reader:
-            dfMoviesDuration.append(row)
-    #transformo resultado en df
-    dfMoviesDuration=pd.DataFrame(dfMoviesDuration)
-
+    dfMoviesDuration=cargaCsvToDataFrame("dfMoviesDuration", "datasets_funciones_fastapi")
+    
     #cambio a lowercase para que no hayan errores de capitalizacion en el input de mi funcion
     dfMoviesDuration["movie_title"] = dfMoviesDuration["movie_title"].str.lower().str.strip()
     Pelicula = Pelicula.lower()
@@ -86,14 +76,8 @@ def peliculas_duracion( Pelicula: str ):
 
 @app.get("/movies/franquicia/{Franquicia}") #decorator
 def franquicia( Franquicia: str ):
-    dfFranquicia = [] #primero cargo el dataset que uso en esta funcion utilizando with open
-    with open(r"datasets_funciones_fastapi//dfFranquicia.csv", newline="", encoding="utf-8") as csvfile:
-        reader = csv.DictReader(csvfile)
-        for row in reader:
-            dfFranquicia.append(row)
-
-    #transformo resultado en df
-    dfFranquicia=pd.DataFrame(dfFranquicia)
+    
+    dfFranquicia=cargaCsvToDataFrame("dfFranquicia", "datasets_funciones_fastapi")
 
     #cambio a lowercase para que no hayan errores de capitalizacion en el input de mi funcion
     dfFranquicia["franquicia"] = dfFranquicia["franquicia"].str.lower().str.strip()
@@ -127,14 +111,8 @@ def franquicia( Franquicia: str ):
 
 @app.get("/movies/pais/{Pais}") #decorator
 def peliculas_pais( Pais: str ):
-    dfPaises = [] #primero cargo el dataset que uso en esta funcion utilizando with open
-    with open(r"datasets_funciones_fastapi//dfPaises.csv", newline="", encoding="utf-8") as csvfile:
-        reader = csv.DictReader(csvfile)
-        for row in reader:
-            dfPaises.append(row)
-
-    #transformo resultado en df
-    dfPaises=pd.DataFrame(dfPaises)
+    
+    dfPaises=cargaCsvToDataFrame("dfPaises", "datasets_funciones_fastapi")
 
     #cambio a lowercase para que no hayan errores de capitalizacion en el input de mi funcion
     dfPaises["production_country"] = dfPaises["production_country"].str.lower().str.strip()
@@ -158,14 +136,7 @@ def peliculas_pais( Pais: str ):
 
 @app.get("/movies/productora/{Productora}") #decorator
 def productoras_exitosas( Productora: str ):
-    dfProductora = [] #primero cargo el dataset que uso en esta funcion utilizando with open
-    with open(r"datasets_funciones_fastapi//dfProductora.csv", newline="", encoding="utf-8") as csvfile:
-        reader = csv.DictReader(csvfile)
-        for row in reader:
-            dfProductora.append(row)
-
-    #transformo resultado en df
-    dfProductora=pd.DataFrame(dfProductora)
+    dfProductora=cargaCsvToDataFrame("dfProductora", "datasets_funciones_fastapi")
 
     #cambio a lowercase para que no hayan errores de capitalizacion en el input de mi funcion
     dfProductora["production_company"] = dfProductora["production_company"].str.lower().str.strip()
@@ -199,24 +170,10 @@ def productoras_exitosas( Productora: str ):
 @app.get("/movies/info_directores/{nombre_director}") #decorator
 def get_director( nombre_director ):
     #PRIMER DATASET DIRECTORES EXITO
-    dfDirectoresExito = [] #primero cargo el dataset que uso en esta funcion utilizando with open
-    with open(r"datasets_funciones_fastapi//dfDirectoresExito.csv", newline="", encoding="utf-8") as csvfile:
-        reader = csv.DictReader(csvfile)
-        for row in reader:
-            dfDirectoresExito.append(row)
-
-    #transformo resultado en df
-    dfDirectoresExito=pd.DataFrame(dfDirectoresExito)
+    dfDirectoresExito=cargaCsvToDataFrame("dfDirectoresExito", "datasets_funciones_fastapi")
 
     #SEGUNDO DATASET DIRECOTRES INFO PELICULA
-    dfDirectoresInfoPeliculas = [] #primero cargo el dataset que uso en esta funcion utilizando with open
-    with open(r"datasets_funciones_fastapi//dfDirectoresInfoPeliculas.csv", newline="", encoding="utf-8") as csvfile:
-        reader = csv.DictReader(csvfile)
-        for row in reader:
-            dfDirectoresInfoPeliculas.append(row)
-
-    #transformo resultado en df
-    dfDirectoresInfoPeliculas=pd.DataFrame(dfDirectoresInfoPeliculas)
+    dfDirectoresInfoPeliculas=cargaCsvToDataFrame("dfDirectoresInfoPeliculas", "datasets_funciones_fastapi")
 
     #cambio a lowercase para que no hayan errores de capitalizacion en el input de mi funcion
     #Tambien le hago un strip para que quite espacios de mas porque algunos nombres no los encontraba
