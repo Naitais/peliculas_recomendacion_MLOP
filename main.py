@@ -51,7 +51,7 @@ def peliculas_idioma( Idioma: str ):
 def peliculas_duracion( Pelicula: str ):
 
     dfMoviesDuration = [] #primero cargo el dataset que uso en esta funcion utilizando with open
-    with open(r"datasets\dfMoviesDuration.csv", newline="", encoding="utf-8") as csvfile:
+    with open(os.path.abspath("datasets/dfPeliculasIdiomas.csv"), newline="", encoding="utf-8") as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
             dfMoviesDuration.append(row)
