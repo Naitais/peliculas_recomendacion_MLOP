@@ -34,9 +34,9 @@ def peliculas_idioma( Idioma: str ):
     if Idioma in idiomasCorto: #utilizo los idiomas para tener algo de error handling cuando el input no esta en la lista de idiomas
         cantidadPels=dfPeliculasIdiomas.loc[dfPeliculasIdiomas.original_language == Idioma, ["original_language"]].count()
         cantidadPels= cantidadPels.iloc[0]
-        return f"La cantidad de películas estrenadas en idioma '{Idioma}' es {cantidadPels}."
+        return f"La cantidad de películas estrenadas en idioma '{(Idioma).title()}' es {cantidadPels}."
     else: 
-        return f"ERROR: '{(Idioma).capitalize()}' no es un idioma valido o no hay información disponible. Ejemplo de idioma valido: en, es, fr, etc. Intente nuevamente."
+        return f"ERROR: '{(Idioma).title()}' no es un idioma valido o no hay información disponible. Ejemplo de idioma valido: en, es, fr, etc. Intente nuevamente."
 
 
 #----------------------------------------------- SEGUNDA FUINCION -----------------------------------------------------#
@@ -73,9 +73,9 @@ def peliculas_duracion( Pelicula: str ):
         movieYear=dfMoviesDuration.loc[dfMoviesDuration["movie_title"] == Pelicula, ["release_year"]]
         movieYear=movieYear.iloc[0, 0]
 
-        return f"La película {(Pelicula).capitalize()} fue estrenada en el año {movieYear} con una duración de {movieDuration} minutos."
+        return f"La película {(Pelicula).title()} fue estrenada en el año {movieYear} con una duración de {movieDuration} minutos."
     else:
-         return f"ERROR: '{(Pelicula).capitalize()}' no es una película valida o no hay información disponible. Intente nuevamente."
+         return f"ERROR: '{(Pelicula).title()}' no es una película valida o no hay información disponible. Intente nuevamente."
 
 
 #----------------------------------------------- TERCERA FUINCION -----------------------------------------------------#
@@ -113,11 +113,11 @@ def franquicia( Franquicia: str ):
         ganancia_promedio = dfFranquicia.loc[dfFranquicia["franquicia"] == Franquicia, ["ganancia_promedio"]]
         ganancia_promedio= ganancia_promedio.iloc[0, 0]
 
-        return f"La franquicia {(Franquicia).capitalize()} posee {cantidadPeliculas} películas, una ganancia total de {ganancia} y una ganancia promedio de {ganancia_promedio}."
+        return f"La franquicia {(Franquicia).title()} posee {cantidadPeliculas} películas, una ganancia total de {ganancia} y una ganancia promedio de {ganancia_promedio}."
 
     else:
          
-         return f"ERROR: '{(Franquicia).capitalize()}' no es una franquicia valida o no hay información disponible. Intente nuevamente."
+         return f"ERROR: '{(Franquicia).title()}' no es una franquicia valida o no hay información disponible. Intente nuevamente."
 
 
 #----------------------------------------------- CUARTA FUINCION -----------------------------------------------------#
@@ -147,11 +147,11 @@ def peliculas_pais( Pais: str ):
 
         cantidadPeliculas = dfPaises.loc[(dfPaises["production_country"]==Pais),["movie_count"]]
         cantidadPeliculas=cantidadPeliculas.iloc[0, 0]
-        return f"En {(Pais).capitalize()} se produjeron {cantidadPeliculas} películas."
+        return f"En {(Pais).title()} se produjeron {cantidadPeliculas} películas."
 
     else:
          
-         return f"ERROR: '{(Pais).capitalize()}' no es un país valido o no hay información disponible. Intente nuevamente."
+         return f"ERROR: '{(Pais).title()}' no es un país valido o no hay información disponible. Intente nuevamente."
 
 
 #----------------------------------------------- QUINTA FUINCION -----------------------------------------------------#
@@ -182,11 +182,11 @@ def productoras_exitosas( Productora: str ):
         ganancia = dfProductora.loc[dfProductora["production_company"] == Productora, ["ganancia_total"]]
         ganancia = ganancia.iloc[0, 0]
 
-        return f"La productora {(Productora).capitalize()} posee {cantidadPeliculas} películas y una ganancia total de {ganancia}."
+        return f"La productora {(Productora).title()} posee {cantidadPeliculas} películas y una ganancia total de {ganancia}."
 
     else:
          
-         return f"ERROR: '{(Productora).capitalize()}' no es una productora valida o no hay información disponible. Intente nuevamente."
+         return f"ERROR: '{(Productora).title()}' no es una productora valida o no hay información disponible. Intente nuevamente."
 
 
 
@@ -239,7 +239,7 @@ def get_director( nombre_director ):
         for i in range(len(infoPelicula)):
             row=infoPelicula.iloc[i].to_dict() #si uso la funcion to_dict() transformo cada row en un diccionario
             listaDictPeliculas.append(row)
-        exitoMensaje=f"El director {(nombre_director).capitalize()} posee un exito medido por el retorno de {exito}. A continuación se lista información de sus películas:"
+        exitoMensaje=f"El director {(nombre_director).title()} posee un exito medido por el retorno de {exito}. A continuación se lista información de sus películas:"
 
         for key in listaDictPeliculas: #remuevo key/value pairs que son innecesarios en el diccionario
             key.pop("", None)
@@ -249,7 +249,7 @@ def get_director( nombre_director ):
 
     else:
          
-         return f"ERROR: '{(nombre_director).capitalize()}' no es un nombre de director valido o no hay información disponible. Intente nuevamente."
+         return f"ERROR: '{(nombre_director).title()}' no es un nombre de director valido o no hay información disponible. Intente nuevamente."
 
 
     
