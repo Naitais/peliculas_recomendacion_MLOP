@@ -1,7 +1,7 @@
 import csv, pandas as pd, json, numpy as np
 
 #levanta datasets y los transforma en dataframes
-def cargaCsvToDataFrame(dataset, carpeta_ubicacion):
+def cargaCsvToDataFrame(dataset, carpeta_ubicacion): #toma el dataset y la carpeta que lo contiene
     path=f"{carpeta_ubicacion}//{dataset}.csv"
     list = [] #primero cargo el dataset que uso en esta funcion utilizando with open
     with open(path, newline="", encoding="utf-8") as csvfile:
@@ -44,7 +44,7 @@ def desanidarVariasColumnas(columna):
         nuevoDF=pd.concat(lista)
     return nuevoDF
 
-#esta funcion crea nuevos dfs para usarlos en las funcion de fastaPI segun las columnas que necesito
+#esta funcion crea nuevos dfs para usarlos en las funciones de fastaPI segun las columnas que necesito
 def creaDfFuncionesFastAPI(columnas, dfMovies):
     nuevoDF = []
     for i in dfMovies["movie_title"]:
