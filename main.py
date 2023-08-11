@@ -210,6 +210,7 @@ def get_director( nombre_director ):
 
 
 #----------------------------------------------- SEPTIMA FUINCION -----------------------------------------------------#
+@app.get("/movies/modelo_recomendacion/{titulo}") #decorator
 def recomendacion( titulo ):
 
     #cargo dataset
