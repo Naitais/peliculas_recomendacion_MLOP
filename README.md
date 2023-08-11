@@ -33,4 +33,6 @@ _Breve descripcion de las funciones:_
 - Modelo de recomendacion --> devuelve 5 peliculas similares a la que se introdujo como input
 
 
-_link de video explicativo de la api (subido a drive)_
+_link de video explicativo de la api (subido a drive)_:
+
+https://drive.google.com/file/d/1AOLSXSqZVLRuptWU9BD774hcVWygoy1T/view?usp=sharing
