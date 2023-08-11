@@ -1,8 +1,8 @@
 from fastapi import FastAPI
 import csv , pandas as pd
-
+from sklearn.neighbors import NearestNeighbors
 from funciones_varias import cargaCsvToDataFrame
-
+from sklearn.feature_extraction.text import TfidfVectorizer
 
 
 
@@ -207,3 +207,37 @@ def get_director( nombre_director ):
     else:
          
          return f"ERROR: '{(nombre_director).title()}' no es un nombre de director valido o no hay información disponible. Intente nuevamente."
+
+
+#----------------------------------------------- SEPTIMA FUINCION -----------------------------------------------------#
+def recomendacion( titulo ):
+
+    #cargo dataset
+    dfMachineLearning=cargaCsvToDataFrame("dfMachineLearning", "datasets_funciones_fastapi")
+
+    #vectorizo la columna movie titles para que sirva de input numerico
+    titulosVectorizados = TfidfVectorizer(stop_words='english') #remueve palabras que no sirven para el modelo
+    titulosMatriz = titulosVectorizados.fit_transform(dfMachineLearning['movie_title'])
+
+    #defino KNN con hiperparametros
+    modeloKNN = NearestNeighbors(n_neighbors=5, metric='cosine')
+
+    #entreno modelo con input numerico de titulos
+    modeloKNN.fit(titulosMatriz)
+
+    #vectorizo el input del usuario para que sea interpretable por el modelo
+    inputTitulo = titulosVectorizados.transform([titulo])
+
+    distances, indices = modeloKNN.kneighbors(inputTitulo)
+
+    recomendations = []
+    counter=1
+    for i in indices[0]:
+        recomendations.append(("Recomendación ",counter,": ",dfMachineLearning['movie_title'].iloc[i]))
+        counter+=1
+    return recomendations
+
+
+
+
+
