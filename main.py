@@ -230,11 +230,11 @@ def recomendacion( titulo ):
     inputTitulo = titulosVectorizados.transform([titulo])
 
     distances, indices = modeloKNN.kneighbors(inputTitulo)
-
+    orden=["Primera", "Segunda", "Tercera", "Cuarta", "Quinta"]
     recomendations = []
-    counter=1
+    counter=0
     for i in indices[0]:
-        recomendations.append(("Recomendación ",counter,": ",dfMachineLearning['movie_title'].iloc[i]))
+        recomendations.append(f"{orden[counter]} recomendación: {dfMachineLearning['movie_title'].iloc[i]}")
         counter+=1
     return recomendations
 
