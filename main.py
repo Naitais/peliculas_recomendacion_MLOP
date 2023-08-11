@@ -4,14 +4,7 @@ from sklearn.neighbors import NearestNeighbors
 from funciones_varias import cargaCsvToDataFrame
 from sklearn.feature_extraction.text import TfidfVectorizer
 
-
-
-
 app = FastAPI()
-
-@app.get("/")
-def home():
-    return {"HOME": "home"}
 
 #----------------------------------------------- PRIMERA FUINCION -----------------------------------------------------#
 
